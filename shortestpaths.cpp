@@ -22,7 +22,7 @@ int main(int argc, char* argv[]){
 	void relax(int, int, int, vector<int>&, vector<bool>&, vector<bool>&, int*);
 	
 	if(argc != 4){
-		cout << "Error: Invalid number of arguments\nUsage is 'ShortestPath <filename> <start node> <k>' \n";
+		cout << "Error: Invalid number of arguments\nUsage is 'shortestpaths <filename> <start node> <k>' \n";
 		return 1;
 	}
 	vector<char> node;
