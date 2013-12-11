@@ -20,6 +20,8 @@ int main(int argc, char* argv[]){
 	int weight, k;
 	int findMin(vector<int>, vector<bool>, vector<bool>);
 	void relax(int, int, int, vector<int>&, vector<bool>&, vector<bool>&, int*);
+	int dist(int, int, vector< vector<int> >&, vector< vector<int> >, vector< vector<int> >, int, int&, vector<int>);
+	
 	
 	if(argc != 4){
 		cout << "Error: Invalid number of arguments\nUsage is 'shortestpaths <filename> <start node> <k>' \n";
@@ -179,7 +181,7 @@ int main(int argc, char* argv[]){
 
 	if(graphType == "D"){
 		int u, v;
-		cout << "Dijkstra\nSource: " << node[startNode] << "\n";
+		outFile << "Dijkstra\nSource: " << node[startNode] << "\n";
 		while(!vertices.empty()){
 			u = findMin(keyValue, is_infinity, visited);
 			if(alist[u].size() == 0){
@@ -211,9 +213,81 @@ int main(int argc, char* argv[]){
 		}
 		outFile << "End Shortest Reliable Paths Algorithm\n";
 	}
+	
+	vector< vector <int> > paths;
+	paths.resize(keyValue.size());
+	
+	for (int j = 0; j < paths.size(); j++)	
+			paths[j].resize(k+1);
+			
+	paths[startNode].assign(k+1, 0);
+	for (int j = 0; j < paths.size(); j++){
+		if(j != startNode){	
+			paths[j].assign(k+1, -2);
+			paths[j][0] = -1;
+			}
+		}
 
-
+	
+	int total =0;
+	for(int i = 0; i < 10; i++){
+		if(!alist[i].empty())
+		total++;
+	}
+	int max = (total - 1) * k;
+	int newcount = 0;
+	
+	int min = 0;
+	vector<int> mins;
+	for(int i = 0; i < total; i++){
+		if(i == startNode)
+			continue;
+		else{
+			for(int j = 1; j <= k; j++){
+				paths[i][j] = dist(i, j, paths, alist, w, startNode, min, mins);
+			}
+		}
+	}
+	
 return 0;
+}
+
+int dist(int node, int i, vector< vector<int> >& paths, vector< vector<int> > alist, vector< vector<int> > w, int startNode, int& min, vector<int> mins){
+	int value = 0;
+	//cout << "node: " << node << "\n";
+	//cout << "i: " << i << "\n";
+	if(node == startNode){
+		return 0;
+	}
+	else if(i == 0)
+		return -1;
+	else if(paths[node][i] != -2)
+		return paths[node][i];
+	else{
+		for(int m = 0; m < alist[node].size(); m++){
+			//cout << "node: " << node << "\n";
+			int adjNode = alist[node][m];
+			
+			value = dist(adjNode, i-1, paths, alist, w, startNode, min, mins);
+			if((value >= 0)){
+				value += w[node][m];
+				mins.pb(value);
+				if(value < paths[adjNode][i-1])
+				paths[adjNode][i-1] = value;
+			}
+		}
+		if(mins.size() > 0){
+			min = mins[0];
+			for(int n = 1; n < mins.size(); n++){
+				if(mins[n] < min)
+					min = mins[n];
+			}
+			paths[node][i] = min;
+		}
+	}
+	mins.clear();
+	
+	return min;
 }
 
 void relax(int u, int v, int w, vector<int>& values, vector<bool>& infinity, vector<bool>& visited, int *distance){
