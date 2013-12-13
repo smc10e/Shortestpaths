@@ -6,10 +6,10 @@ CCO = g++ -o
 all: shortestpaths
 
 shortestpaths: $(SRCDIR)/shortestpaths.o
-        $(CCO) shortestpaths $(SRCDIR)/shortestpaths.o
+		$(CCO) shortestpaths $(SRCDIR)/shortestpaths.o
 
 shortestpaths.o: $(SRCDIR)/shortestpaths.cpp
-    $(CCC) $(INCL) shortestpaths.cpp
+	$(CCC) $(INCL) shortestpaths.cpp
 
-clean:
-    rm shortestpaths *.o
+clean: 
+	rm shortestpaths *.o
