@@ -11,7 +11,5 @@ shortestpaths: $(SRCDIR)/shortestpaths.o
 shortestpaths.o: $(SRCDIR)/shortestpaths.cpp
     $(CCC) $(INCL) shortestpaths.cpp
 
-
-
 clean:
     rm shortestpaths *.o
